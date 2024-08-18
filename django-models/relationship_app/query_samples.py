@@ -1,5 +1,13 @@
 from relationship_app.models import Author, Book, Library, Librarian
 
-library = Library.objects.get(name="Central Library")
-books_by_author = Book.objects.filter(author__name="author_name")
-librarian_for_library = Librarian.objects.get(library__name='library_name')
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
+books_in_library = library.books.all()
+
+author_name = "J.K. Rowling"
+author = Author.objects.get(name=author_name)
+books_by_author = Book.objects.filter(author=author)
+
+library_name = "Central Library"
+library = Library.objects.get(name=library_name)
+librarian = library.librarian
