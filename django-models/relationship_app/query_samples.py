@@ -10,4 +10,4 @@ books_by_author = Book.objects.filter(author=author)
 
 library_name = "Central Library"
 library = Library.objects.get(name=library_name)
-librarian = library.librarian
+Librarian.objects.get(library="")
