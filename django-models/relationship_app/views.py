@@ -55,26 +55,28 @@ class LogoutView(LogoutView):
     
     
 # 3rd
-def user_is_admin(user):
+def is_admin(user):
     return user.userprofile.role == 'Admin'
 
-def user_is_librarian(user):
+def is_librarian(user):
     return user.userprofile.role == 'Librarian'
 
-def user_is_member(user):
+def is_member(user):
     return user.userprofile.role == 'Member'
 
 
-@user_passes_test(user_is_admin)
+@user_passes_test(is_admin)
 def admin_view(request):
     return render(request, 'relationship_app/admin_view.html')
 
 
-@user_passes_test(user_is_librarian)
+# Librarian View
+@user_passes_test(is_librarian)
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 
-@user_passes_test(user_is_member)
+# Member View
+@user_passes_test(is_member)
 def member_view(request):
-    return render(request, 'relationship_app/member_view.html')    
+    return render(request, 'relationship_app/member_view.html')
