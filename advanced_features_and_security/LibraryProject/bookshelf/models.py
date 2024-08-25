@@ -7,7 +7,7 @@ class CustomUser(AbstractUser):
     profile_photo = models.ImageField()
 
 
-class UserManager(BaseUserManager):
+class CustomUserManager(BaseUserManager):
 
     def create_user(self, email, password):
         if not email:
