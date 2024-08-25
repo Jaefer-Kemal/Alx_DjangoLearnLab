@@ -1,4 +1,30 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser, BaseUserManager
+
+
+class User(AbstractUser):
+    date_of_birth = models.DateField()
+    profile_photo = models.ImageField()
+
+
+class UserManager(BaseUserManager):
+
+    def create_user(self, email, password):
+        if not email:
+            raise ValueError("User must have an email")
+
+        user = self.model(email=self.normalize_email(email))
+        user.setpassword(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password):
+        user = self.create_user(email, password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save(using=self._db)
+        return user
+
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
