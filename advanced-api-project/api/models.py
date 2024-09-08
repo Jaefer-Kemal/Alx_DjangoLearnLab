@@ -1,9 +1,8 @@
-from django.db import models  # Importing the models module from Django
+from django.db import models  
 
 
 # Defining the Author model
 class Author(models.Model):
-    # The 'name' field is a character field with a maximum length of 200 characters.
     name = models.CharField(max_length=200)
 
     # This method defines how to represent an Author instance as a string.
@@ -13,11 +12,8 @@ class Author(models.Model):
 
 # Defining the Book model
 class Book(models.Model):
-    # The 'title' field is a character field with a maximum length of 200 characters.
     title = models.CharField(max_length=200)
-
-    # The 'publication_year' field is a date field to store the publication date of the book.
-    publication_year = models.DateField()
+    publication_year = models.IntegerField()
 
     # The 'author' field is a foreign key that establishes a relationship to the Author model.
     # 'on_delete=models.CASCADE' means that if an author is deleted, all their associated books will also be deleted.
