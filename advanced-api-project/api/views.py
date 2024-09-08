@@ -4,8 +4,18 @@ from rest_framework import generics
 from .models import Book, Author
 from .serializers import BookSerializer, AuthorSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django_filters import rest_framework as django_filters
+from rest_framework import filters
 
+class BookFilter(django_filters.FilterSet):
+    title = django_filters.CharFilter(lookup_expr='icontains')
+    author = django_filters.CharFilter(lookup_expr='icontains')
+    publication_year = django_filters.NumberFilter(lookup_expr=['exact',"lte","gte"])
 
+    class Meta:
+        model = Book
+        fields = ['title', 'author', 'publication_year']
+        
 class AuthorCreateView(generics.CreateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
@@ -14,7 +24,13 @@ class AuthorCreateView(generics.CreateAPIView):
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = (django_filters.DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
+    filterset_class = BookFilter
+    search_fields = ['title', 'author__name']
+    ordering_fields = ['title', 'publication_year']
+    ordering = ['title']
  
 # DetailView for retrieving a single book by ID
 class BookDetailView(generics.RetrieveAPIView):
