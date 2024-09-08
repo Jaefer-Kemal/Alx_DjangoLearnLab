@@ -1,4 +1,5 @@
 from django.urls import reverse
+from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.test import APITestCase
 from .models import Book, Author
@@ -6,10 +7,15 @@ from .models import Book, Author
 class BookAPITestCase(APITestCase):
 
     def setUp(self):
-        # Create a test author and book instance for CRUD operations
-        self.author = Author.objects.create(name="John Doe")
+         # Create a test user
+        self.user = User.objects.create_user(username='testuser', password='testpass')
+        
+        # Log in the test user
+        self.client.login(username='Jack', password='testpass')
+        
+        self.author = Author.objects.create(name="Ali Ahmed")
         self.book = Book.objects.create(
-            title="Test Book",
+            title="T Book",
             publication_year="2023",  
             author=self.author
         )
