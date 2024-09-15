@@ -1,0 +1,22 @@
+{% extends "blog/base.html" %}
+
+{% block body %}
+<div class="profile-container">
+    <h1>User Profile</h1>
+    <div class="profile-info">
+        <div class="profile-header">
+        <img src="https://picsum.photos/200/300" alt="picsum">
+            <div class="profile-details">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Joined:</strong> {{ user.date_joined }}</p>
+            </div>
+        </div>
+        <div class="profile-bio">
+            <h2>About Me</h2>
+            <p>{{ user.profile.bio }}</p>
+        </div>
+    </div>
+    <a href="#"" class="btn">Edit Profile</a>
+</div>
+{% endblock %}
