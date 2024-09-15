@@ -1,0 +1,15 @@
+{% extends "blog/base.html" %}
+
+
+{% block title %}Edit/Create Blog {% endblock %}
+
+{% block content %}
+    <h1>Form</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Render the form fields as paragraphs -->
+        <button type="submit">Save</button>
+    </form>
+    <a href="{% url 'blog:post-list' %}">Back to List</a>
+    {% endblock %}
+

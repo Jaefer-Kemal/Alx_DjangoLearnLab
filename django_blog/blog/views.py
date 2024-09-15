@@ -1,7 +1,12 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from .forms import RegisterForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views import generic
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Post
+from .forms import PostForm
 
 def register(request):
     if request.method == "POST":
@@ -25,3 +30,44 @@ def index(request):
 def profile_view(request):
     user = request.user
     return render(request, 'blog/profile.html', {'user': user})
+
+class PostListView(generic.ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = "post"
+    
+class PostDetailView(generic.DetailView):
+    model = Post
+    template_name = 'blog/post_detail.html'
+    
+# def post_detail_view(request, primary_key):
+#     try:
+#         post = post.objects.get(pk=primary_key)
+#     except Post.DoesNotExist:
+#         raise Http404('Post does not exist')
+
+#     return render(request, 'blog/post_detail.html', context={'post': post})
+
+class PostCreateView(LoginRequiredMixin, generic.edit.CreateView):
+    model = Post
+    template_name = 'blog/post_form.html'  
+    form_class = PostForm
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user 
+        return super().form_valid(form)
+
+    
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.edit.UpdateView):
+    model = Post
+    template_name = 'blog/post_form.html'  
+    form_class = PostForm 
+
+    def test_func(self):
+        post = self.get_object()  
+       
+        return self.request.user == post.author  # Check if the logged-in user is the author
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin,generic.edit.DeleteView):
+    model = Post
+    template_name = 'blog/post_delete.html'  
+    success_url = reverse_lazy('post-list') 

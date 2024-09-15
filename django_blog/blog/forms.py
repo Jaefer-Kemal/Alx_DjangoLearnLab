@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
+from .models import Post
 
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={
@@ -21,3 +22,8 @@ class RegisterForm(UserCreationForm):
             'password1': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}),
             'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
         }
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = "__all__"
