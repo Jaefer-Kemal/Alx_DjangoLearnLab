@@ -23,11 +23,13 @@ class RegisterForm(UserCreationForm):
             'password2': forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirm Password'}),
         }
 
+
+
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content']
-        
+        fields = ['title', 'content', 'tags'] 
+
 
 
 class CommentForm(forms.ModelForm):

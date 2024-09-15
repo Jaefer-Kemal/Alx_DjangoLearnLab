@@ -88,7 +88,7 @@ class CommentCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
     
     
-class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Comment
     fields = ['content']
     template_name = 'blog/edit_comment.html'
