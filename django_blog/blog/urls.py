@@ -23,8 +23,8 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),
     path('post', blog_views.PostListView.as_view(), name='post-list'),  # URL for the list view
     path('post/<int:pk>/', blog_views.PostDetailView.as_view(), name='post-detail'),  # URL for detail view
-    path('post/create/', blog_views.PostCreateView.as_view(), name='post-create'),  # URL for create view
-    path('post/update/<int:pk>/', blog_views.PostUpdateView.as_view(), name='post-update'),  # URL for update view
-    path('post/delete/<int:pk>/', blog_views.PostDeleteView.as_view(), name='post-delete'),  
+    path('post/new/', blog_views.PostCreateView.as_view(), name='post-create'),  # URL for create view
+    path('post/<int:pk>/update/', blog_views.PostUpdateView.as_view(), name='post-update'),  # URL for update view
+    path('post/<int:pk>/delete/', blog_views.PostDeleteView.as_view(), name='post-delete'),  
 ]
 
