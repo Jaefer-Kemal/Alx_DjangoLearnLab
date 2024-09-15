@@ -119,3 +119,12 @@ def search_view(request):
     else:
         posts = Post.objects.none()  # Return an empty queryset if no query is provided
     return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+
+class PostByTagListView(generic.ListView):
+    model = Post
+    template_name = 'blog/post_by_tag.html'
+    
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        return Post.objects.filter(tags__slug=tag_slug).distinct()
