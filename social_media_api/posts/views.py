@@ -5,6 +5,13 @@ from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
+
+from rest_framework import generics  # Import generics for get_object_or_404
+from .models import Post, Like
+from .serializers import PostSerializer
+from django_filters.rest_framework import DjangoFilterBackend
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -23,7 +30,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
-        post = self.get_object()
+        post = generics.get_object_or_404(Post, pk=pk)  # Use generics.get_object_or_404
         like, created = Like.objects.get_or_create(user=request.user, post=post)
         if created:
             # Create a notification
@@ -38,7 +45,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def unlike(self, request, pk=None):
-        post = self.get_object()
+        post = generics.get_object_or_404(Post, pk=pk)  # Use generics.get_object_or_404
         try:
             like = Like.objects.get(user=request.user, post=post)
             like.delete()
@@ -48,7 +55,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-        
         
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
