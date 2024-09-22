@@ -1,9 +1,7 @@
-# Configure URL patterns in accounts/urls.py 
-# to include routes for registration (/register), 
-# login (/login), and user profile management (/profile).
-
 from django.urls import path
+from .views import RegisterView, LoginView
 
 urlpatterns = [
-    path("login/")
+    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', LoginView.as_view(), name='login'),
 ]
