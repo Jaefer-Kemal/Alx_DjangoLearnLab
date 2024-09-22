@@ -3,7 +3,7 @@ from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Q
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -15,6 +15,16 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['title', 'content']
+    
+    @action(detail=False, methods=['get'])
+    def feed(self, request):
+        user = request.user
+        posts = Post.objects.filter(author__in=user.following.all()).order_by('-created_at')
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
@@ -25,10 +35,3 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def user_feed(request):
-    following_ids = request.user.following.values_list('id', flat=True)
-    posts = Post.objects.filter(author__id__in=following_ids).order_by('-created_at')
-    serializer = PostSerializer(posts, many=True)  # Ensure you have a PostSerializer
-    return Response(serializer.data)
