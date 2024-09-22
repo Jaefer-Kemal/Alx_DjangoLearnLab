@@ -2,12 +2,8 @@ from rest_framework import viewsets, permissions
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Q
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-
-
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -19,7 +15,8 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def feed(self, request):
         user = request.user
-        posts = Post.objects.filter(author__in=user.following_users).order_by('-created_at')
+        following_users = user.following.all()  # Get the users that the current user follows
+        posts = Post.objects.filter(author__in=following_users).order_by('-created_at')  # Filter posts by following users
         serializer = self.get_serializer(posts, many=True)
         return Response(serializer.data)
 
@@ -33,5 +30,3 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
-
-
